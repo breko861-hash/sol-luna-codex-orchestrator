@@ -3,14 +3,16 @@
 The parent agent is the orchestrator and final authority.
 
 Preferred default parent:
-- Terra Medium for normal planning, decomposition, orchestration, review and integration.
-- Escalate to Sol when materially stronger global judgement is required.
+- Sol Medium for normal planning, architecture, decomposition, orchestration, review, integration and final acceptance.
+- Keep Sol at Medium by default. Raise Sol to High or xHigh only when the problem genuinely requires materially stronger global reasoning.
 
-Use the cheapest worker that can reliably complete the task:
+Use workers for implementation according to task difficulty:
 - Spark: optional micro-worker for tiny, localised, deterministic implementation tasks.
 - Luna: default bounded implementation worker.
-- Terra: difficult bounded implementation, investigation or debugging.
-- Sol: consequential architecture, security-sensitive work, difficult cross-system reasoning or repeated worker failure.
+- Terra High: difficult bounded implementation, investigation or debugging.
+- Sol High/xHigh: very difficult architecture, security-sensitive work, consequential cross-system reasoning, or problems that remain unresolved after a well-specified Terra attempt.
+
+Do not use Terra as the default orchestrator. Sol Medium owns the overall plan, decomposition, review and acceptance.
 
 ## Model availability
 
@@ -29,10 +31,11 @@ The workflow must remain fully usable without Spark.
 
 Do not invoke a worker merely because one exists.
 
-The parent may handle directly:
+Sol may handle directly:
 - questions and analysis;
 - trivial changes where delegation would cost more than execution;
-- architecture or product decisions that must be resolved before implementation.
+- architecture or product decisions that must be resolved before implementation;
+- final integration and acceptance.
 
 Delegate when implementation can be packaged into a clear, independently judgeable unit.
 
@@ -91,46 +94,51 @@ Use Terra High for bounded work requiring materially more independent reasoning,
 - integration problems;
 - reviewing a suspicious worker result.
 
-The normal Terra Medium parent may solve such work directly or delegate to a Terra High worker when parallelism or context isolation is useful.
+Terra remains a worker/escalation tier. Project-level architecture, product decisions, review and final acceptance remain with Sol.
 
 ## Sol escalation
 
-Use Sol when the problem requires stronger global judgement rather than merely more implementation effort.
+Sol Medium remains the parent throughout normal work.
 
-Escalate to Sol for:
+Raise Sol to High when the problem requires materially stronger global judgement, including:
 - major architecture decisions;
 - authentication or security-sensitive design;
 - consequential data or infrastructure changes;
 - difficult cross-system reasoning;
 - unresolved product ambiguity;
 - repeated failure after a well-specified Terra attempt;
-- final review of particularly high-risk changes.
+- particularly high-risk final review.
 
-Do not use Sol merely to compensate for poor task decomposition.
+Use Sol xHigh only for exceptional cases where High is still insufficient or the consequences justify the additional reasoning cost.
+
+Do not raise Sol reasoning merely to compensate for poor task decomposition.
 
 ## Workflow
 
 For non-trivial implementation:
-1. Understand the request and relevant code.
-2. Resolve architectural and product ambiguity.
-3. Make a concise implementation plan.
-4. Split implementation into small, self-contained packages.
-5. Select the cheapest appropriate worker.
+1. Sol Medium understands the request and relevant code.
+2. Sol resolves architectural and product ambiguity.
+3. Sol makes a concise implementation plan.
+4. Sol splits implementation into small, self-contained packages.
+5. Sol selects the cheapest appropriate available worker.
 6. Give the worker only the context required for that package.
 7. Require deterministic validation where possible.
-8. Review the returned diff and validation evidence.
+8. Sol reviews the returned diff and validation evidence.
 9. Send narrowly scoped correction work if required.
-10. Integrate and perform final acceptance.
+10. Sol integrates and performs final acceptance.
 
 ## Worker selection
 
-Use this escalation order when appropriate:
+Use this routing by default:
 
-Spark -> Luna -> Terra -> Sol
+- Tiny deterministic task + Spark available -> Spark.
+- Tiny deterministic task + Spark unavailable -> Luna.
+- Normal bounded implementation -> Luna.
+- Difficult bounded implementation/debugging/investigation -> Terra High.
+- Very difficult global/architectural/security-sensitive problem -> Sol High.
+- Exceptional unresolved problem -> Sol xHigh.
 
-This is an escalation ladder, not a requirement to try every model.
-
-If a task obviously requires Luna, Terra or Sol, route directly to that model.
+This is a routing guide, not a requirement to try every model in sequence.
 
 Do not repeatedly retry the same model when a clearly specified task has already demonstrated that the model is insufficient.
 
@@ -163,7 +171,7 @@ One precise outcome.
 
 Only information necessary to perform this task.
 
-Do not dump the parent's full context into workers.
+Do not dump Sol's full context into workers.
 
 ### SCOPE
 
@@ -214,7 +222,7 @@ A task is too broad if the worker must:
 - decide major design questions;
 - infer unclear product requirements;
 - modify several unrelated areas;
-- guess what the parent intends.
+- guess what Sol intends.
 
 ## Failure and escalation
 
@@ -225,11 +233,12 @@ If Spark fails a clearly specified task:
 If Luna fails:
 1. check whether the assignment was unclear or too broad;
 2. improve or split the package if necessary;
-3. if the package was already good, escalate to Terra.
+3. if the package was already good, escalate the bounded task to Terra High.
 
 If Terra fails:
-- determine whether the problem is architectural, ambiguous or consequential;
-- escalate those problems to Sol.
+- determine whether the problem is architectural, ambiguous, security-sensitive or otherwise consequential;
+- raise Sol from Medium to High for those problems;
+- use Sol xHigh only when the problem remains exceptional and unresolved.
 
 Prefer better decomposition before stronger models.
 
@@ -241,21 +250,21 @@ Never allow multiple writing workers to modify overlapping areas simultaneously.
 
 ## Review
 
-Worker validation comes before parent review whenever possible.
+Worker validation comes before Sol review whenever possible.
 
 Workers may inspect and test their own implementation, but their assessment is not final acceptance.
 
-The parent owns:
+Sol owns:
 - integration;
 - review;
 - correction decisions;
 - final acceptance.
 
-For consequential issues escalated to Sol, resolve the issue before final acceptance.
+For consequential issues, raise Sol reasoning effort before final acceptance when justified.
 
 ## Context discipline
 
-Keep the parent focused on:
+Keep Sol focused on:
 - user requirements;
 - architecture;
 - decisions;
