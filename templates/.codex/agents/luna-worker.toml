@@ -1,5 +1,5 @@
 name = "luna-worker"
-description = "Default bounded implementation worker for clearly scoped coding, fixes and tests."
+description = "Default bounded implementation worker when Spark is unavailable or not appropriate."
 model = "gpt-5.6-luna"
 model_reasoning_effort = "high"
 
