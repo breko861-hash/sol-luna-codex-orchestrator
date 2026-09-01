@@ -1,13 +1,17 @@
 ---
 name: delegate-work
-description: Use whenever the parent agent is preparing implementation work for a subagent. Select the cheapest appropriate available worker and convert the task into a small, self-contained work package before delegation.
+description: Use whenever Sol is preparing implementation work for a subagent. Select the cheapest appropriate available worker and convert the task into a small, self-contained work package before delegation.
 ---
 
 # Delegate Work
 
+Sol Medium remains the default parent, orchestrator and final authority.
+
+This skill selects the implementation or escalation worker. It does not change the default parent model.
+
 Before spawning an implementation worker:
 
-1. Resolve architecture and product ambiguity.
+1. Resolve architecture and product ambiguity in Sol.
 2. Decide whether delegation is actually worthwhile.
 3. Select the cheapest available worker capable of reliably completing the task.
 4. Create a self-contained work package.
@@ -28,15 +32,19 @@ Spark is optional. If it is unavailable, unsupported, rate-limited, or fails to 
 
 Default for normal bounded implementation.
 
-Use when the task requires meaningful coding judgement but architecture and behaviour are already defined.
+Use when the task requires meaningful coding judgement but Sol has already defined the architecture, scope and behaviour.
 
 ### terra-worker
 
-Use for difficult bounded debugging, investigation, exploration or cross-cutting implementation.
+Use Terra High for difficult bounded debugging, investigation, exploration or cross-cutting implementation.
+
+Terra is an escalation worker, not the default orchestrator.
 
 ### sol-escalation
 
-Use when materially stronger global judgement is required, including architecture, security-sensitive decisions, consequential cross-system reasoning or repeated worker failure.
+Use Sol High when materially stronger global judgement is required, including architecture, security-sensitive decisions, consequential cross-system reasoning, unresolved ambiguity or failure after a well-specified Terra attempt.
+
+Use Sol xHigh only for exceptional unresolved cases where High is insufficient or the consequences justify the additional reasoning cost.
 
 Do not escalate merely because decomposition is poor.
 
@@ -48,7 +56,7 @@ One precise outcome.
 
 Only information needed for this task.
 
-Do not pass the parent's full context unless it is genuinely required.
+Do not pass Sol's full context unless it is genuinely required.
 
 ## SCOPE
 
@@ -86,7 +94,7 @@ Before delegation, reject and split the package if:
 - architecture is unresolved;
 - acceptance criteria are unclear;
 - it overlaps another active writing worker;
-- the worker would need to guess parent intent.
+- the worker would need to guess Sol's intent.
 
 Pass the smallest sufficient context.
 
@@ -94,8 +102,14 @@ Pass the smallest sufficient context.
 
 Do not repeatedly retry a model on the same clearly specified failure.
 
-Default escalation:
+Default routing:
 
-`spark-worker -> luna-worker -> terra-worker -> sol-escalation`
+- tiny deterministic + Spark available -> `spark-worker`
+- tiny deterministic + Spark unavailable -> `luna-worker`
+- normal bounded implementation -> `luna-worker`
+- difficult bounded work -> `terra-worker`
+- very difficult global / architecture / security -> `sol-escalation`
 
-This is not a mandatory sequence. Skip levels when the nature of the task clearly requires a stronger worker.
+This is not a mandatory sequence. Skip levels when the nature of the task clearly requires a stronger worker or higher Sol reasoning effort.
+
+Sol performs final review, integration and acceptance.
