@@ -12,7 +12,7 @@ The current recommended routing is:
 
 > **Use the cheapest capable worker. Keep global judgement with the parent. Escalate only when the task requires it.**
 
-The original Sol + Luna setup is preserved on the [`v1-sol-luna`](../../tree/v1-sol-luna) branch.
+The original Sol + Luna setup is preserved on the [`v1-sol-luna`](https://github.com/breko861-hash/sol-luna-codex-orchestrator/tree/v1-sol-luna) branch.
 
 ## Why this routing?
 
