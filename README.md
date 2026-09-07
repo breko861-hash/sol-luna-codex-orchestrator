@@ -1,31 +1,35 @@
-# Astra + Spark/Luna Codex Orchestrator
+# Astra/Sol + Spark/Luna Codex Orchestrator
 
-A lightweight Codex multi-agent setup for using a strong parent model without spending it on every implementation step.
+A lightweight Codex multi-agent setup that keeps the parent focused on judgement while delegating bounded implementation when it actually helps.
 
-Current recommended routing:
+The current setup is parent-aware rather than Astra-only:
 
-- **GPT-6 Astra Low** - default parent for planning, architecture, decomposition, orchestration, review, integration and final acceptance
+- **GPT-6 Astra Low** - preferred parent for larger or genuinely agentic work that benefits from planning, decomposition, delegation and review
+- **Sol** - also a valid parent for smaller or straightforward coding work where delegation overhead may not be worth it
 - **Spark** - optional ultra-fast micro-worker for tiny deterministic edits when available
 - **Luna High** - default bounded implementation worker
-- **Sol Medium** - harder bounded implementation, debugging and investigation
-- **Astra Medium/High** - exceptional global architecture, security-sensitive or unresolved parent-level problems
+- **Sol Medium** - harder bounded worker when Astra is the parent and Luna is not enough
+- **Astra Medium/High** - exceptional parent-level reasoning when Astra Low is not enough
 
-> **Astra keeps the global context. Spark and Luna do most bounded implementation. Sol Medium handles harder bounded work. Raise Astra only when the parent problem itself is genuinely difficult.**
+> **The active parent owns the global problem. Delegate bounded work only when it saves context, time or cost.**
 
 ## Preserved older setups
 
 - [`v1-sol-luna`](https://github.com/breko861-hash/sol-luna-codex-orchestrator/tree/v1-sol-luna) - original Sol + Luna setup
 - [`v2-sol-spark-luna-terra`](https://github.com/breko861-hash/sol-luna-codex-orchestrator/tree/v2-sol-spark-luna-terra) - Sol Medium parent, Spark/Luna workers, Terra High escalation
+- [`v3-astra-low-parent`](https://github.com/breko861-hash/sol-luna-codex-orchestrator/tree/v3-astra-low-parent) - Astra Low parent, Spark/Luna workers and Sol Medium escalation
 
 ## Why the instructions are leaner now
 
-GPT-6 Astra needs less scaffolding than earlier coding models. The current template deliberately keeps `AGENTS.md` focused on durable repository-wide behaviour instead of turning it into a long execution recipe.
+Newer models need less scaffolding than earlier coding agents. The current template deliberately keeps `AGENTS.md` focused on durable repository-wide behaviour instead of turning it into a long execution recipe.
 
-The delegation skill is also smaller. Its root file acts as a router, and the detailed work-package format lives in a supporting reference that is only needed when work is actually being delegated.
+The delegation skill also uses progressive disclosure: its root file is a small router, while the detailed work-package format lives in a supporting reference that is only needed when work is actually delegated.
 
-The setup also avoids ritualistic testing. Verification should be proportional to the change, while persistence is explicit so the parent keeps going through implementation, relevant checks and fixes instead of stopping after a first plausible pass.
+Verification is proportional to the change rather than ritualistic, and persistence is explicit so the active parent continues through implementation, relevant checks and fixes when the requested outcome clearly requires end-to-end completion.
 
-## Routing
+## Parent-aware routing
+
+### When Astra Low is the parent
 
 ```text
 Astra Low
@@ -39,11 +43,29 @@ Astra Low
     `-- exceptional parent-level problem --------> Astra Medium/High
 ```
 
-Spark is optional. If the current account or Codex runtime cannot use it, the same task falls back to Luna.
+### When Sol is the parent
+
+```text
+Sol
+    |
+    |-- small / straightforward work ------------> handle directly
+    |
+    |-- tiny delegated work ----------------------> Spark if available
+    |
+    |-- normal delegated implementation ----------> Luna High
+    |
+    `-- harder work ------------------------------> handle directly in Sol
+```
+
+If Sol itself is the active parent, do not spawn a Sol worker merely to recreate the parent. Increase Sol reasoning only when the task genuinely justifies it.
+
+Spark is optional. If the current account or Codex runtime cannot use it, the same delegated task falls back to Luna.
 
 ## Quick start
 
-Select **GPT-6 Astra Low** as the parent in Codex, then copy the contents of `templates/` into the root of your project.
+Copy the contents of `templates/` into the root of your project.
+
+Use **Astra Low** as the parent for larger/orchestrated work, or **Sol** as the parent for smaller/straightforward work.
 
 ```text
 your-repo/
@@ -65,21 +87,26 @@ If your project already has an `AGENTS.md`, merge the orchestration guidance rat
 
 ## Recommended roles
 
-| Role | Model / effort |
+| Situation | Recommended model / effort |
 |---|---|
-| Default parent / orchestrator | Astra Low |
+| Larger / agentic parent | Astra Low |
+| Smaller / straightforward parent | Sol |
 | Optional tiny deterministic worker | Spark, when available |
-| Default implementation worker | Luna High |
-| Hard bounded worker | Sol Medium |
-| Exceptional global parent reasoning | Astra Medium/High |
+| Default bounded implementation worker | Luna High |
+| Hard bounded worker under Astra | Sol Medium |
+| Exceptional Astra parent reasoning | Astra Medium/High |
 
 ## What each model does
 
 ### Astra Low
 
-Owns the global problem: understanding the request, resolving architecture and product ambiguity, deciding what to delegate, reviewing worker output, integrating changes and deciding when the task is actually complete.
+Use as the parent when the task benefits from planning, decomposition, multi-step coordination, review and integration. For non-trivial implementation, it should generally orchestrate rather than write every bounded change itself.
 
-For non-trivial implementation, it should generally orchestrate rather than write every bounded change itself.
+### Sol as parent
+
+Use for smaller or straightforward coding work where spawning workers would add unnecessary overhead. Sol may still delegate to Spark or Luna when doing so clearly saves context, time or cost.
+
+For harder work, the active Sol parent handles the problem directly. Raise Sol reasoning only when justified rather than routing through a separate Sol worker.
 
 ### Spark
 
@@ -87,31 +114,31 @@ Use for very small, localised, deterministic edits that are cheap to verify. It 
 
 ### Luna High
 
-Use for normal bounded implementation once the parent has made the important product and architecture decisions.
+Use for normal bounded implementation once the active parent has resolved the important product and architecture decisions.
 
-### Sol Medium
+### Sol Medium worker
 
-Use when Luna is not enough for a bounded problem - for example harder debugging, investigation, subtle state behaviour or implementation that needs materially more independent reasoning.
+When Astra is the parent, use Sol Medium if Luna is not enough for a bounded problem such as harder debugging, investigation, subtle state behaviour or implementation that needs materially more independent reasoning.
 
-Sol Medium is not the parent in this setup. If the problem becomes a genuinely global architecture, security or product decision, return it to Astra.
+If the problem becomes a genuinely global architecture, security or product decision, return it to the active parent instead of silently taking ownership of it.
 
 ### Astra Medium/High
 
-Reserve higher Astra reasoning for exceptional parent-level problems where Low is not enough, especially consequential architecture, security-sensitive design, difficult cross-system reasoning or unresolved failures that change the overall approach.
+Reserve higher Astra reasoning for exceptional parent-level problems where Astra Low is not enough, especially consequential architecture, security-sensitive design, difficult cross-system reasoning or unresolved failures that change the overall approach.
 
 ## Completion and verification
 
-The parent should continue through implementation, relevant verification and fixes caused by the requested change. It should not stop at the first plausible implementation when the requested outcome clearly means making the feature or fix work end-to-end.
+The active parent should continue through implementation, relevant verification and fixes caused by the requested change. It should not stop at the first plausible implementation when the requested outcome clearly means making the feature or fix work end-to-end.
 
 Verification should be proportional to risk. Run meaningful required checks, but do not add or repeatedly rerun tests for tiny reversible changes just because a generic instruction says to test everything.
 
 ## Delegation skill
 
-The skill description is intentionally short so it is easy for Codex to route correctly:
+The skill description is intentionally short:
 
 `Use when delegating bounded coding work to a subagent.`
 
-The root skill only handles routing. The more detailed handoff template is in:
+The root skill handles routing. The more detailed handoff template lives in:
 
 `templates/.agents/skills/delegate-work/references/work-package.md`
 
@@ -144,12 +171,13 @@ You should not need to append orchestration instructions to every prompt.
 ## Philosophy
 
 1. Keep repository-wide instructions short and durable.
-2. Let Astra use judgement instead of turning every task into a rigid recipe.
-3. Prefer delegation for non-trivial bounded implementation.
-4. Keep worker context minimal and sufficient.
-5. Use Spark opportunistically and fall back cleanly to Luna.
-6. Use Luna High for normal work and Sol Medium only when the bounded task really needs it.
-7. Raise Astra reasoning only when the parent-level problem is genuinely difficult.
-8. Verify proportionately to risk.
-9. Define completion clearly enough that the parent keeps going until the requested outcome actually works.
-10. Preserve older setups in version branches instead of making one configuration fit every account and model generation.
+2. Let the active parent use judgement instead of turning every task into a rigid recipe.
+3. Use Astra Low for larger orchestrated work and Sol for smaller straightforward work.
+4. Delegate only when it provides a real benefit.
+5. Keep worker context minimal and sufficient.
+6. Use Spark opportunistically and fall back cleanly to Luna.
+7. Use Luna High for normal bounded implementation.
+8. When Astra is the parent, use Sol Medium only when the bounded task really needs it.
+9. Verify proportionately to risk.
+10. Define completion clearly enough that the parent keeps going until the requested outcome actually works.
+11. Preserve older setups in version branches instead of forcing one configuration onto every model generation.
